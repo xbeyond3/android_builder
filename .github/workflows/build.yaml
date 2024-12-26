@@ -12,10 +12,10 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
-          java-version: '11'
+          java-version: 11
       - id: get-project
         name: Get project name
-        run: echo "PROJECT=$(cat project-to-build)" >> $GITHUB_OUTPUT
+        run: echo "::set-output name=PROJECT::$(cat project-to-build)"
       - name: Clone project
         run: git clone --depth=1 ${{ steps.get-project.outputs.PROJECT }} project
       - name: Build the app
@@ -23,7 +23,7 @@ jobs:
         run: |
           if [ ! -f "gradlew" ]; then gradle wrapper; fi
           chmod +x gradlew
-          ./gradlew assembleRelease
+          ./gradlew assembleDebug --stacktrace
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
